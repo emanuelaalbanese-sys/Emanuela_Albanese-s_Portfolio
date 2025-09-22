@@ -1,66 +1,100 @@
 <!doctype html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio - Nome Cognome</title>
+<style>
+/* Stili base per cards e modale */
+body { font-family: sans-serif; margin: 0; padding: 0; }
+#projectsGrid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:1rem; padding:1rem; }
+.card { border:1px solid #ccc; padding:1rem; border-radius:8px; background:#f9f9f9; }
+.tags .tag { display:inline-block; margin:0.2rem; padding:0.2rem 0.5rem; background:#ddd; border-radius:4px; font-size:0.8rem; }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
+.modal.show { display:flex; }
+.panel { background:#fff; padding:2rem; border-radius:8px; max-width:500px; width:90%; position:relative; }
+button { cursor:pointer; }
+</style>
+</head>
+<body>
+
+<h1>Portfolio - Nome Cognome</h1>
+
+<div id="projectsGrid"></div>
+
+<footer>
 © <span id="year"></span> Nome Cognome · <span>Disponibile per lavoro e freelance</span>
 </footer>
 
-<div id="modal" class="modal" aria-hidden>
-<div class="panel" role="dialog">
-<button id="closeBtn" style="float:right">Chiudi</button>
-<div id="modalContent"></div>
-</div>
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="panel" role="dialog">
+    <button id="closeBtn" style="float:right">Chiudi</button>
+    <div id="modalContent"></div>
+  </div>
 </div>
 
 <script>
+// Imposta anno corrente
 document.getElementById('year').textContent = new Date().getFullYear();
 
+// Lista progetti
 const projects = [
-{
-id:1,
-title:'Nome Progetto A',
-thumbText:'Dashboard SaaS',
-summary:'Ridisegno interfaccia e ottimizzazione conversione',
-role:'Lead Designer',
-stack:['Figma','React','Node.js'],
-result:'+24% conversione in 3 mesi',
-details:'Obiettivo: aumentare la conversione. Processo: research, prototype, AB test. Risultati: +24% conversione, 12% riduzione churn.'
-},
-{
-id:2,
-title:'Nome Progetto B',
-thumbText:'App Mobile',
-summary:'App per gestione abbonamenti',
-role:'Fullstack Developer',
-stack:['Flutter','Firebase'],
-result:'200k utenti in 6 mesi',
-details:'Progetto end-to-end, implementato sistema di pagamenti e analytics.'
-}
+  {
+    id:1,
+    title:'Nome Progetto A',
+    thumbText:'Dashboard SaaS',
+    summary:'Ridisegno interfaccia e ottimizzazione conversione',
+    role:'Lead Designer',
+    stack:['Figma','React','Node.js'],
+    result:'+24% conversione in 3 mesi',
+    details:'Obiettivo: aumentare la conversione. Processo: research, prototype, AB test. Risultati: +24% conversione, 12% riduzione churn.'
+  },
+  {
+    id:2,
+    title:'Nome Progetto B',
+    thumbText:'App Mobile',
+    summary:'App per gestione abbonamenti',
+    role:'Fullstack Developer',
+    stack:['Flutter','Firebase'],
+    result:'200k utenti in 6 mesi',
+    details:'Progetto end-to-end, implementato sistema di pagamenti e analytics.'
+  }
 ];
 
+// Genera cards progetti
 const grid = document.getElementById('projectsGrid');
 projects.forEach(p=>{
-const el = document.createElement('div'); el.className='card';
-el.innerHTML = `
-<div class="project-thumb">${p.thumbText}</div>
-<h3>${p.title}</h3>
-<p class="meta">${p.summary}</p>
-<div class="tags">${p.stack.map(s=>`<span class="tag">${s}</span>`).join('')}</div>
-<p class="meta"><strong>Ruolo:</strong> ${p.role} · <strong>Risultato:</strong> ${p.result}</p>
-<a href="#" class="cta" data-id="${p.id}">Vedi caso studio</a>
-`;
-grid.appendChild(el);
+  const el = document.createElement('div'); 
+  el.className='card';
+  el.innerHTML = `
+    <div class="project-thumb">${p.thumbText}</div>
+    <h3>${p.title}</h3>
+    <p class="meta">${p.summary}</p>
+    <div class="tags">${p.stack.map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+    <p class="meta"><strong>Ruolo:</strong> ${p.role} · <strong>Risultato:</strong> ${p.result}</p>
+    <a href="#" class="cta" data-id="${p.id}">Vedi caso studio</a>
+  `;
+  grid.appendChild(el);
 });
 
-document.body.addEventListener('click',e=>{
-if(e.target.matches('.cta')){
-e.preventDefault();
-const id = e.target.dataset.id || null;
-const project = projects.find(x=>x.id==id);
-if(project){
-document.getElementById('modalContent').innerHTML = `<h3>${project.title}</h3><p>${project.details}</p><p class="meta"><strong>Risultato:</strong> ${project.result}</p>`;
-document.getElementById('modal').classList.add('show');
-}
-}
-if(e.target.id=='closeBtn') document.getElementById('modal').classList.remove('show');
+// Modale progetti
+document.body.addEventListener('click', e=>{
+  if(e.target.matches('.cta')){
+    e.preventDefault();
+    const id = e.target.dataset.id;
+    const project = projects.find(x=>x.id==id);
+    if(project){
+      document.getElementById('modalContent').innerHTML = `
+        <h3>${project.title}</h3>
+        <p>${project.details}</p>
+        <p class="meta"><strong>Risultato:</strong> ${project.result}</p>
+      `;
+      document.getElementById('modal').classList.add('show');
+    }
+  }
+  if(e.target.id=='closeBtn') document.getElementById('modal').classList.remove('show');
 });
 </script>
+
 </body>
 </html>
